@@ -448,7 +448,6 @@ public class SubscriptionManager {
         if (VDBG) logd("[getActiveSubscriptionInfoForSimSlotIndex]+ slotIdx=" + slotIdx);
         if (!isValidSlotId(slotIdx)) {
             logd("[getActiveSubscriptionInfoForSimSlotIndex]- invalid slotIdx");
-            return null;
         }
 
         SubscriptionInfo result = null;
@@ -529,6 +528,7 @@ public class SubscriptionManager {
      * all subscriptions that have been seen.
      * @hide
      */
+
     public int getAllSubscriptionInfoCount() {
         if (VDBG) logd("[getAllSubscriptionInfoCount]+");
 
@@ -588,6 +588,7 @@ public class SubscriptionManager {
 
     /**
      * Add a new SubscriptionInfo to SubscriptionInfo database if needed
+     * 
      * @param iccId the IccId of the SIM card
      * @param slotId the slot which the SIM is inserted
      * @return the URL of the newly created row or the updated row
@@ -600,6 +601,9 @@ public class SubscriptionManager {
         }
         if (!isValidSlotId(slotId)) {
             logd("[addSubscriptionInfoRecord]- invalid slotId");
+        }
+        if (!isValidSlotId(slotId)) {
+            logd("[addSubInfoRecord]- invalid slotId");
         }
 
         try {
@@ -1002,7 +1006,7 @@ public class SubscriptionManager {
      * an invalid subscription id, i.e. < 0.
      * @hide
      */
-    public void clearDefaultsForInactiveSubIds() {
+    public void clearDefaultsForInactiveSubIds() {=
         if (VDBG) logd("clearDefaultsForInactiveSubIds");
         try {
             ISub iSub = ISub.Stub.asInterface(ServiceManager.getService("isub"));

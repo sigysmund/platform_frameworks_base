@@ -24,14 +24,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.UserInfo;
 import android.database.Cursor;
-import android.location.Country;
-import android.location.CountryDetector;
 import android.net.Uri;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.provider.ContactsContract.CommonDataKinds.Callable;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.DataUsageFeedback;
 import android.telecom.PhoneAccountHandle;
 import android.telephony.PhoneNumberUtils;
@@ -387,6 +384,7 @@ public class CallLog {
         public static Uri addCall(CallerInfo ci, Context context, String number,
                 int presentation, int callType, int features, PhoneAccountHandle accountHandle,
                 long start, int duration, Long dataUsage) {
+            // FIXME using -1 as subId instead of SubscriptionManager.INVALID_SUB_ID
             return addCall(ci, context, number, presentation, callType, features, accountHandle,
                     start, duration, dataUsage, false);
         }
@@ -407,6 +405,7 @@ public class CallLog {
          * @param accountHandle The accountHandle object identifying the provider of the call
          * @param start time stamp for the call in milliseconds
          * @param duration call duration in seconds
+         * @param subId the subscription id.
          * @param dataUsage data usage for the call in bytes, null if data usage was not tracked for
          *                  the call.
          * @param addForAllUsers If true, the call is added to the call log of all currently
@@ -505,13 +504,12 @@ public class CallLog {
                 if (cursor != null) {
                     try {
                         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-                            final String dataId = cursor.getString(0);
-                            updateDataUsageStatForData(resolver, dataId);
-                            if (duration >= MIN_DURATION_FOR_NORMALIZED_NUMBER_UPDATE_MS
-                                    && callType == Calls.OUTGOING_TYPE
-                                    && TextUtils.isEmpty(ci.normalizedNumber)) {
-                                updateNormalizedNumber(context, resolver, dataId, number);
-                            }
+                            final Uri feedbackUri = DataUsageFeedback.FEEDBACK_URI.buildUpon()
+                                    .appendPath(cursor.getString(0))
+                                    .appendQueryParameter(DataUsageFeedback.USAGE_TYPE,
+                                                DataUsageFeedback.USAGE_TYPE_CALL)
+                                    .build();
+                            resolver.update(feedbackUri, new ContentValues(), null, null);
                         }
                     } finally {
                         cursor.close();
