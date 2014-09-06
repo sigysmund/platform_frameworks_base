@@ -1006,7 +1006,7 @@ public class SubscriptionManager {
      * an invalid subscription id, i.e. < 0.
      * @hide
      */
-    public void clearDefaultsForInactiveSubIds() {=
+    public void clearDefaultsForInactiveSubIds() {
         if (VDBG) logd("clearDefaultsForInactiveSubIds");
         try {
             ISub iSub = ISub.Stub.asInterface(ServiceManager.getService("isub"));
