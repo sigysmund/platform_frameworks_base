@@ -36,7 +36,7 @@
         android:layout_marginTop="6dip"
         android:layout_marginBottom="6dip"
         android:layout_weight="1">
-        <TextView android:id="@id/title"
+       <TextView android:id="@id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
@@ -51,5 +51,6 @@
             android:ellipsize="none"
             android:textAppearance="?attr/textAppearanceListItemSecondary"
             android:textColor="?attr/textColorSecondary"/>
+
     </RelativeLayout>
 </LinearLayout>
