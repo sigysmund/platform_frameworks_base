@@ -24,6 +24,7 @@ import android.graphics.*;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 import com.android.systemui.R;
@@ -291,6 +292,7 @@ public class TaskView extends FrameLayout implements Task.TaskCallbacks,
                 // Animate the action button in
                 fadeInActionButton(mConfig.transitionEnterFromAppDelay,
                         mConfig.taskViewEnterFromAppDuration);
+
             } else {
                 // Animate the task up if it was occluding the launch target
                 if (ctx.currentTaskOccludesLaunchTarget) {
@@ -366,6 +368,23 @@ public class TaskView extends FrameLayout implements Task.TaskCallbacks,
                 .setInterpolator(PhoneStatusBar.ALPHA_IN)
                 .withLayer()
                 .start();
+    }
+
+    public void fadeInActionButton(boolean withDelay) {
+        // Hide the action button
+        mActionButtonView.setAlpha(0f);
+
+        // Animate the action button in
+        ViewPropertyAnimator animator = mActionButtonView.animate().alpha(1f)
+                .setDuration(mConfig.taskBarEnterAnimDuration)
+                .setInterpolator(PhoneStatusBar.ALPHA_IN)
+                .withLayer();
+        if (withDelay) {
+            animator.setStartDelay(mConfig.taskBarEnterAnimDelay);
+        }
+        animator.start();
+
+
     }
 
     /** Animates this task view as it leaves recents by pressing home. */
