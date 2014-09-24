@@ -48,7 +48,6 @@ import java.util.MissingResourceException;
  * implementation Telecom will use to interact with the app.
  * @hide
  */
-@SystemApi
 public class PhoneAccount implements Parcelable {
 
     /**
