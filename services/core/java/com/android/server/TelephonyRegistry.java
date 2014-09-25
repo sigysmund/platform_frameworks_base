@@ -215,6 +215,7 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
                 case MSG_UPDATE_DEFAULT_SUB: {
                     int newDefaultPhoneId = msg.arg1;
                     int newDefaultSubId = (Integer)(msg.obj);
+
                     if (VDBG) {
                         log("MSG_UPDATE_DEFAULT_SUB:current mDefaultSubId=" + mDefaultSubId
                             + " current mDefaultPhoneId=" + mDefaultPhoneId + " newDefaultSubId= "
@@ -710,6 +711,7 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
                     }
                     if (r.matchPhoneStateListenerEvent(PhoneStateListener.LISTEN_SERVICE_STATE) &&
                             idMatch(r.subId, subId, phoneId)) {
+                    	                  
                         try {
                             if (DBG) {
                                 log("notifyServiceStateForSubscriber: callback.onSSC r=" + r
@@ -757,6 +759,7 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
                     if (r.matchPhoneStateListenerEvent(
                                 PhoneStateListener.LISTEN_SIGNAL_STRENGTHS) &&
                             idMatch(r.subId, subId, phoneId)) {
+
                         try {
                             if (DBG) {
                                 log("notifySignalStrengthForSubscriber: callback.onSsS r=" + r
@@ -770,6 +773,7 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
                     }
                     if (r.matchPhoneStateListenerEvent(PhoneStateListener.LISTEN_SIGNAL_STRENGTH) &&
                             idMatch(r.subId, subId, phoneId)){
+
                         try {
                             int gsmSignalStrength = signalStrength.getGsmSignalStrength();
                             int ss = (gsmSignalStrength == 99 ? -1 : gsmSignalStrength);
@@ -812,6 +816,7 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
                 for (Record r : mRecords) {
                     if (validateEventsAndUserLocked(r, PhoneStateListener.LISTEN_CELL_INFO) &&
                             idMatch(r.subId, subId, phoneId)) {
+
                         try {
                             if (DBG_LOC) {
                                 log("notifyCellInfo: mCellInfo=" + cellInfo + " r=" + r);
