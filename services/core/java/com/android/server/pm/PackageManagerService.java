@@ -4659,6 +4659,12 @@ public class PackageManagerService extends IPackageManager.Stub {
             if (mLazyDexOpt) {
                 filterRecentlyUsedApps(sortedPkgs);
             }
+            // Filter out packages that aren't recently used.
+            filterRecentlyUsedApps(pkgs);
+            // Add all remaining apps.
+            for (PackageParser.Package pkg : pkgs) {
+                sortedPkgs.add(pkg);
+            }
 
             int i = 0;
             int total = sortedPkgs.size();
