@@ -1675,6 +1675,15 @@ public class ListPopupWindow {
                 child.setPressed(true);
             }
 
+            // Manage the pressed view based on motion position. This allows us to
+            // play nicely with actual touch and scroll events.
+            final View motionView = getChildAt(mMotionPosition - mFirstPosition);
+            if (motionView != null) {
+                motionView.setPressed(false);
+            }
+            mMotionPosition = position;
+            child.setPressed(true);
+
             // Ensure that keyboard focus starts from the last touched position.
             setSelectedPositionInt(position);
             positionSelectorLikeTouch(position, child, x, y);
