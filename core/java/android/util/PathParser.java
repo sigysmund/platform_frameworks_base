@@ -215,6 +215,7 @@ public class PathParser {
         result.mEndWithNegOrDot = false;
         boolean secondDot = false;
         boolean isExponential = false;
+
         for (; currentIndex < s.length(); currentIndex++) {
             boolean isPrevExponential = isExponential;
             isExponential = false;
