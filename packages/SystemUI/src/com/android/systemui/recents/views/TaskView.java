@@ -383,8 +383,6 @@ public class TaskView extends FrameLayout implements Task.TaskCallbacks,
             animator.setStartDelay(mConfig.taskBarEnterAnimDelay);
         }
         animator.start();
-
-
     }
 
     /** Animates this task view as it leaves recents by pressing home. */
