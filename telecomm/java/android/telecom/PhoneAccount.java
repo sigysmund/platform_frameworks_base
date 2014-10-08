@@ -151,6 +151,7 @@ public class PhoneAccount implements Parcelable {
     private final Bitmap mIconBitmap;
     private final int mIconTint;
     private final int mHighlightColor;
+
     private final CharSequence mLabel;
     private final CharSequence mShortDescription;
     private final List<String> mSupportedUriSchemes;
