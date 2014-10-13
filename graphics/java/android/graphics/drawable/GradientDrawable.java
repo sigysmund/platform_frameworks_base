@@ -1569,6 +1569,9 @@ public class GradientDrawable extends Drawable {
         ColorStateList mTint = null;
         PorterDuff.Mode mTintMode = DEFAULT_TINT_MODE;
 
+        ColorStateList mTint = null;
+        PorterDuff.Mode mTintMode = DEFAULT_TINT_MODE;
+
         int[] mThemeAttrs;
         int[] mAttrSize;
         int[] mAttrGradient;
