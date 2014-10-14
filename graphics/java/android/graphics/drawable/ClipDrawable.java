@@ -172,6 +172,26 @@ public class ClipDrawable extends Drawable implements Drawable.Callback {
         return (mState != null && mState.canApplyTheme()) || super.canApplyTheme();
     }
 
+    @Override
+    public void applyTheme(Theme t) {
+        super.applyTheme(t);
+
+        final ClipState state = mClipState;
+        if (state == null) {
+            return;
+        }
+
+        if (state.mDrawable != null) {
+            state.mDrawable.applyTheme(t);
+        }
+    }
+
+    @Override
+    public boolean canApplyTheme() {
+        final ClipState state = mClipState;
+        return state != null && state.mDrawable != null && state.mDrawable.canApplyTheme();
+    }
+
     // overrides from Drawable.Callback
 
     @Override

@@ -507,6 +507,26 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
     }
 
     @Override
+    public void applyTheme(Theme t) {
+        super.applyTheme(t);
+
+        final RotateState state = mState;
+        if (state == null) {
+            return;
+        }
+
+        if (state.mDrawable != null) {
+            state.mDrawable.applyTheme(t);
+        }
+    }
+
+    @Override
+    public boolean canApplyTheme() {
+        final RotateState state = mState;
+        return state != null && state.mDrawable != null && state.mDrawable.canApplyTheme();
+    }
+
+    @Override
     public Drawable mutate() {
         if (!mMutated && super.mutate() == this) {
             mState.mDrawable.mutate();

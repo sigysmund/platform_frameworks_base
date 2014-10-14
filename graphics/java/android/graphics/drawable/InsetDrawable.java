@@ -468,6 +468,12 @@ public class InsetDrawable extends Drawable implements Drawable.Callback {
             return mChangingConfigurations;
         }
 
+        @Override
+        public boolean canApplyTheme() {
+            return super.canApplyTheme() || mThemeAttrs != null
+                    || mDrawable != null && mDrawable.canApplyTheme();
+        }
+
         boolean canConstantState() {
             if (!mCheckedConstantState) {
                 mCanConstantState = mDrawable.getConstantState() != null;
