@@ -1774,6 +1774,17 @@
         <enum name="KEYCODE_TV_MEDIA_CONTEXT_MENU" value="257" />
         <enum name="KEYCODE_TV_TIMER_PROGRAMMING" value="258" />
         <enum name="KEYCODE_HELP" value="259" />
+        <enum name="KEYCODE_SPEC_TV" value="260" />
+        <enum name="KEYCODE_SPEC_HOTEL" value="261" />
+        <enum name="KEYCODE_SPEC_ROOM" value="262" />
+        <enum name="KEYCODE_SPEC_SHOP" value="263" />
+        <enum name="KEYCODE_SPEC_SPECIAL" value="264" />
+        <enum name="KEYCODE_SPEC_MOVIE" value="265" />
+        <enum name="KEYCODE_SPEC_MUSIC" value="266" />
+        <enum name="KEYCODE_SPEC_GAMES" value="267" />
+        <enum name="KEYCODE_SPEC_MESSAGES" value="268" />
+        <enum name="KEYCODE_SPEC_INFO" value="269" />
+        <enum name="KEYCODE_SPEC_EPG" value="270" />
     </attr>
 
     <!-- ***************************************************************** -->
