@@ -748,8 +748,44 @@ public class KeyEvent extends InputEvent implements Parcelable {
     public static final int KEYCODE_TV_TIMER_PROGRAMMING = 258;
     /** Key code constant: Help key. */
     public static final int KEYCODE_HELP = 259;
-
-    private static final int LAST_KEYCODE = KEYCODE_HELP;
+    /*
+     * Nevron RC additional defines
+     */
+    /** Key code constant: Special Tv key.
+     * On a remote controller, the button labeled TV. */
+    public static final int KEYCODE_SPEC_TV         = 260;
+    /** Key code constant: Special Hotel key.
+     * On a remote controller, the button labeled HOTEL. */
+    public static final int KEYCODE_SPEC_HOTEL      = 261;
+    /** Key code constant: Special Room key.
+     * On a remote controller, the button labeled ROOM. */
+    public static final int KEYCODE_SPEC_ROOM       = 262;
+    /** Key code constant: Special Shop key.
+     * On a remote controller, the button labeled SHOP. */
+    public static final int KEYCODE_SPEC_SHOP       = 263;
+    /** Key code constant: Special Special key.
+     * On a remote controller, the button labeled SPECIAL. */
+    public static final int KEYCODE_SPEC_SPECIAL    = 264;
+    /** Key code constant: Special Movie key.
+     * On a remote controller, the button labeled MOVIE. */
+    public static final int KEYCODE_SPEC_MOVIE      = 265;
+    /** Key code constant: Special Music key.
+     * On a remote controller, the button labeled MUSIC. */
+    public static final int KEYCODE_SPEC_MUSIC      = 266;
+    /** Key code constant: Special Games key.
+     * On a remote controller, the button labeled GAMES. */
+    public static final int KEYCODE_SPEC_GAMES      = 267;
+    /** Key code constant: Special Messages key.
+     * On a remote controller, the button labeled MESSAGES. */
+    public static final int KEYCODE_SPEC_MESSAGES   = 268;
+    /** Key code constant: Special Info key.
+     * On a remote controller, the button labeled INFO. */
+    public static final int KEYCODE_SPEC_INFO       = 269;
+    /** Key code constant: Special Epg key.
+     * On a remote controller, the button labeled EPG. */
+    public static final int KEYCODE_SPEC_EPG        = 270;
+    
+    private static final int LAST_KEYCODE = KEYCODE_SPEC_EPG;
 
     // NOTE: If you add a new keycode here you must also add it to:
     //  isSystem()
@@ -1167,7 +1203,7 @@ public class KeyEvent extends InputEvent implements Parcelable {
         return KeyCharacterMap.getDeadChar(accent, c);
     }
 
-    static final boolean DEBUG = false;
+    static final boolean DEBUG = true;
     static final String TAG = "KeyEvent";
 
     private static final int MAX_RECYCLED = 10;
