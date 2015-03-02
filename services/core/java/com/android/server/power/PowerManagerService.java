@@ -1601,7 +1601,9 @@ public final class PowerManagerService extends SystemService
      * to being fully awake or else go to sleep for good.
      */
     private boolean isItBedTimeYetLocked() {
-        return mBootCompleted && !isBeingKeptAwakeLocked();
+        // For now: no sleeping of screen, always ON
+        return false;
+        //return mBootCompleted && !isBeingKeptAwakeLocked();
     }
 
     /**
