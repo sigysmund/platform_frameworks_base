@@ -32482,6 +32482,17 @@ package android.view {
     field public static final int KEYCODE_SOFT_LEFT = 1; // 0x1
     field public static final int KEYCODE_SOFT_RIGHT = 2; // 0x2
     field public static final int KEYCODE_SPACE = 62; // 0x3e
+    field public static final int KEYCODE_SPEC_EPG = 270; // 0x10e
+    field public static final int KEYCODE_SPEC_GAMES = 267; // 0x10b
+    field public static final int KEYCODE_SPEC_HOTEL = 261; // 0x105
+    field public static final int KEYCODE_SPEC_INFO = 269; // 0x10d
+    field public static final int KEYCODE_SPEC_MESSAGES = 268; // 0x10c
+    field public static final int KEYCODE_SPEC_MOVIE = 265; // 0x109
+    field public static final int KEYCODE_SPEC_MUSIC = 266; // 0x10a
+    field public static final int KEYCODE_SPEC_ROOM = 262; // 0x106
+    field public static final int KEYCODE_SPEC_SHOP = 263; // 0x107
+    field public static final int KEYCODE_SPEC_SPECIAL = 264; // 0x108
+    field public static final int KEYCODE_SPEC_TV = 260; // 0x104
     field public static final int KEYCODE_STAR = 17; // 0x11
     field public static final int KEYCODE_STB_INPUT = 180; // 0xb4
     field public static final int KEYCODE_STB_POWER = 179; // 0xb3
