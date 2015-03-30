@@ -1311,6 +1311,15 @@ public class Intent implements Parcelable, Cloneable {
     public static final String ACTION_SEARCH_LONG_PRESS = "android.intent.action.SEARCH_LONG_PRESS";
 
     /**
+     * Broadcast Action: Sent when application crash occurs.
+     *
+     * <p class="note">This is a protected intent that can only be sent
+     * by the system.
+     */
+    @SdkConstant(SdkConstantType.BROADCAST_INTENT_ACTION)
+    public static final String ACTION_APP_CRASH = "android.intent.action.ACTION_APP_CRASH";
+    
+    /**
      * Activity Action: The user pressed the "Report" button in the crash/ANR dialog.
      * This intent is delivered to the package which installed the application, usually
      * Google Play.

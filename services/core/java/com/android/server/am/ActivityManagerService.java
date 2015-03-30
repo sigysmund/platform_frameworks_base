@@ -93,6 +93,13 @@ import com.google.android.collect.Maps;
 
 import libcore.io.IoUtils;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -220,6 +227,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -393,7 +401,7 @@ public final class ActivityManagerService extends ActivityManagerNative
     // Whether we should show our dialogs (ANR, crash, etc) or just perform their
     // default actuion automatically.  Important for devices without direct input
     // devices.
-    private boolean mShowDialogs = true;
+    private boolean mShowDialogs = false;
 
     BroadcastQueue mFgBroadcastQueue;
     BroadcastQueue mBgBroadcastQueue;
@@ -1343,6 +1351,10 @@ public final class ActivityManagerService extends ActivityManagerNative
                             res.set(0);
                         }
                     }
+                    Intent crashReport = new Intent(Intent.ACTION_APP_CRASH);
+                    crashReport.putExtra("crashingReport", proc.crashingReport);
+                    mContext.sendBroadcast(crashReport);
+                    sendCrashReport(proc.crashingReport);
                 }
 
                 ensureBootCompleted();
@@ -1375,6 +1387,10 @@ public final class ActivityManagerService extends ActivityManagerNative
                         // Just kill the app if there is no dialog to be shown.
                         killAppAtUsersRequest(proc, null);
                     }
+                    Intent crashReport = new Intent(Intent.ACTION_APP_CRASH);
+                    crashReport.putExtra("crashingReport", proc.crashingReport);
+                    mContext.sendBroadcast(crashReport);
+                    sendCrashReport(proc.crashingReport);
                 }
 
                 ensureBootCompleted();
@@ -1949,6 +1965,40 @@ public final class ActivityManagerService extends ActivityManagerNative
         ncl.start();
     }
 
+    private static void sendCrashReport(ActivityManager.ProcessErrorStateInfo info) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("processName", info.processName);
+            data.put("pid", info.pid);
+            data.put("uid", info.uid);
+            data.put("condition", info.condition);
+            data.put("tag", info.tag);
+            data.put("stackTrace", info.stackTrace);
+            // POST report to server
+            String uri = "http://" + SystemProperties.get("nevron.server.domain", "iptv.nevronitv.si") 
+                    + "/index/crash-report";
+            HttpPost post = new HttpPost(uri);
+            post.setEntity(new StringEntity(data.toString()));
+            //post.setHeader("Accept", "application/json");
+            post.setHeader("Content-type", "application/json");
+            // Execute
+            HttpResponse response = new DefaultHttpClient().execute(post);
+            Log.i(TAG, "HTTP status: " + response.getStatusLine().getStatusCode());
+        } catch(JSONException e) {
+            Log.e(TAG, "Could not build crash report data.");
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, "Could not convert crash report data.");
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            Log.e(TAG, "ClientProtocolException:" + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e(TAG, "IOException:" + e.getMessage());
+            e.printStackTrace();
+        } 
+    }
+    
     public IAppOpsService getAppOpsService() {
         return mAppOpsService;
     }
