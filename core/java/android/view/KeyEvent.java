@@ -1203,7 +1203,7 @@ public class KeyEvent extends InputEvent implements Parcelable {
         return KeyCharacterMap.getDeadChar(accent, c);
     }
 
-    static final boolean DEBUG = false;
+    static final boolean DEBUG = true;
     static final String TAG = "KeyEvent";
 
     private static final int MAX_RECYCLED = 10;
