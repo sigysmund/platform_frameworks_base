@@ -116,6 +116,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.view.WindowManager.LayoutParams.*;
 import static android.view.WindowManagerPolicy.WindowManagerFuncs.LID_ABSENT;
@@ -183,6 +185,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     static public final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
     static public final String SYSTEM_DIALOG_REASON_ASSIST = "assist";
 
+    static public final String PACKAGE_NEVRON_IPTV = "com.nevron.iptv";
+    
     /**
      * These are the system UI flags that, when changing, can cause the layout
      * of the screen to change.
@@ -2442,6 +2446,24 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         // timeout.
         if (keyCode == KeyEvent.KEYCODE_HOME) {
 
+        	if(!isNevronActivityInterruptible()) {
+        		Log.i(TAG, "Ignoring HOME; event canceled.");
+        		return -1;
+        	} else {
+        		try {
+                    ActivityManagerNative.getDefault().stopAppSwitches();
+                } catch (RemoteException e) {
+                }
+        		sendCloseSystemWindows(SYSTEM_DIALOG_REASON_HOME_KEY);
+        		mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        		mHomeIntent.setClassName(PACKAGE_NEVRON_IPTV, 
+        				PACKAGE_NEVRON_IPTV + ".StartupActivity"
+        		);
+        		mContext.startActivityAsUser(mHomeIntent, UserHandle.CURRENT);
+        	}
+        	
+        	/* Disabled HOME processing, using own implementation
+        	
             // If we have released the home key, and didn't do anything else
             // while it was pressed, then it is time to go home!
             if (!down) {
@@ -2516,6 +2538,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     handleLongPressOnHome();
                 }
             }
+            //*/
             return -1;
         } else if (keyCode == KeyEvent.KEYCODE_MENU) {
             // Hijack modified menu keys for debugging features
@@ -2844,6 +2867,29 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         return false;
     }
 
+    private boolean isNevronActivityInterruptible() {
+    	boolean haveStay = SystemProperties.getBoolean("persist.nevron.occupied", false);
+    	if(mFocusedWindow != null && mFocusedWindow.getOwningPackage() != null 
+    			&& mFocusedWindow.getOwningPackage().equals(PACKAGE_NEVRON_IPTV)) {
+    		Pattern p = Pattern.compile("(com\\.nevron\\.iptv\\/\\.[A-Za-z\\.]+Activity)");
+    		Matcher m = p.matcher(mFocusedApp.toString());
+    		if(m.find()) {
+    			String className = m.group(0);
+    			
+        		// Stay & Dashboard
+        		if(className.endsWith("dashboard.DashboardActivity") && haveStay) {
+        			return false;
+        		}
+        	
+        		// NoStay & TV
+        		if(className.endsWith("tv.TvActivity") && !haveStay) {
+        			return false;
+        		}
+    		}
+    	}
+    	return true; // Default HOME behavior
+    }
+    
     private void launchAssistLongPressAction() {
         performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, false);
         sendCloseSystemWindows(SYSTEM_DIALOG_REASON_ASSIST);

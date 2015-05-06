@@ -286,7 +286,7 @@ public final class ActivityManagerService extends ActivityManagerNative
     static final boolean DEBUG_LOCKSCREEN = localLOGV || false;
     static final boolean DEBUG_RECENTS = localLOGV || false;
     static final boolean VALIDATE_TOKENS = false;
-    static final boolean SHOW_ACTIVITY_START_TIME = true;
+    static final boolean SHOW_ACTIVITY_START_TIME = false;
 
     // Control over CPU and battery monitoring.
     static final long BATTERY_STATS_TIME = 30*60*1000;      // write battery stats every 30 minutes.
@@ -399,7 +399,7 @@ public final class ActivityManagerService extends ActivityManagerNative
     public IntentFirewall mIntentFirewall;
 
     // Whether we should show our dialogs (ANR, crash, etc) or just perform their
-    // default actuion automatically.  Important for devices without direct input
+    // default action automatically.  Important for devices without direct input
     // devices.
     private boolean mShowDialogs = false;
 
@@ -1339,6 +1339,13 @@ public final class ActivityManagerService extends ActivityManagerNative
                         }
                         return;
                     }
+                    
+                    if(proc.processName.startsWith("com.nevron.")) {
+                        Slog.w(TAG, "[ERROR] Expecting application restart: " + proc.starting);
+                        PrintWriter pw = new PrintWriter(System.err);
+                        proc.dump(pw, "[E] ");
+                    }
+                    
                     if (mShowDialogs && !mSleeping && !mShuttingDown) {
                         Dialog d = new AppErrorDialog(mContext,
                                 ActivityManagerService.this, res, proc);
@@ -1353,7 +1360,7 @@ public final class ActivityManagerService extends ActivityManagerNative
                     }
                     Intent crashReport = new Intent(Intent.ACTION_APP_CRASH);
                     crashReport.putExtra("crashingReport", proc.crashingReport);
-                    mContext.sendBroadcast(crashReport);
+                    mContext.sendBroadcastAsUser(crashReport, new UserHandle(UserHandle.USER_OWNER));
                     sendCrashReport(proc.crashingReport);
                 }
 
@@ -1377,6 +1384,12 @@ public final class ActivityManagerService extends ActivityManagerNative
                             null, null, 0, null, null, null, AppOpsManager.OP_NONE,
                             false, false, MY_PID, Process.SYSTEM_UID, 0 /* TODO: Verify */);
 
+                    if(proc.processName.startsWith("com.nevron.")) {
+                        Slog.w(TAG, "[ANR] Expecting application restart: " + proc.starting);
+                        PrintWriter pw = new PrintWriter(System.err);
+                        proc.dump(pw, "[A] ");
+                    }
+                    
                     if (mShowDialogs) {
                         Dialog d = new AppNotRespondingDialog(ActivityManagerService.this,
                                 mContext, proc, (ActivityRecord)data.get("activity"),
@@ -1389,7 +1402,7 @@ public final class ActivityManagerService extends ActivityManagerNative
                     }
                     Intent crashReport = new Intent(Intent.ACTION_APP_CRASH);
                     crashReport.putExtra("crashingReport", proc.crashingReport);
-                    mContext.sendBroadcast(crashReport);
+                    mContext.sendBroadcastAsUser(crashReport, new UserHandle(UserHandle.USER_OWNER));
                     sendCrashReport(proc.crashingReport);
                 }
 
@@ -1995,6 +2008,9 @@ public final class ActivityManagerService extends ActivityManagerNative
             e.printStackTrace();
         } catch (IOException e) {
             Log.e(TAG, "IOException:" + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e(TAG, "Exception:" + e.getMessage());
             e.printStackTrace();
         } 
     }
@@ -16833,8 +16849,12 @@ public final class ActivityManagerService extends ActivityManagerNative
      * dialog / global actions also might want different behaviors.
      */
     private static final boolean shouldShowDialogs(Configuration config) {
+        // Enforce always no show
+        return false;
+        /*
         return !(config.keyboard == Configuration.KEYBOARD_NOKEYS
                 && config.touchscreen == Configuration.TOUCHSCREEN_NOTOUCH);
+        */
     }
 
     /**
