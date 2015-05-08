@@ -70,6 +70,7 @@ public class TelecomManager {
     /**
      * The {@link android.content.Intent} action used to configure a
      * {@link android.telecom.ConnectionService}.
+     * @hide
      */
     @SystemApi
     public static final String ACTION_CONNECTION_SERVICE_CONFIGURE =
@@ -84,6 +85,7 @@ public class TelecomManager {
     /**
      * The {@link android.content.Intent} action used to show the settings page used to configure
      * {@link PhoneAccount} preferences.
+     * @hide
      */
     @SystemApi
     public static final String ACTION_CHANGE_PHONE_ACCOUNTS =
@@ -115,6 +117,7 @@ public class TelecomManager {
      * {@link PhoneAccountHandle} to use when making the call.
      * <p class="note">
      * Retrieve with {@link android.content.Intent#getParcelableExtra(String)}.
+     * @hide
      */
     @SystemApi
     public static final String EXTRA_PHONE_ACCOUNT_HANDLE =
@@ -166,6 +169,7 @@ public class TelecomManager {
     /**
      * Optional extra for {@link android.telephony.TelephonyManager#ACTION_PHONE_STATE_CHANGED}
      * containing the component name of the associated connection service.
+     * @hide
      */
     @SystemApi
     public static final String EXTRA_CONNECTION_SERVICE =
@@ -202,6 +206,7 @@ public class TelecomManager {
      * {@link ConnectionService}s which interact with {@link RemoteConnection}s should only populate
      * this if the {@link android.telephony.TelephonyManager#getLine1Number()} value, as that is the
      * user's expected caller ID.
+     * @hide
      */
     @SystemApi
     public static final String EXTRA_CALL_BACK_NUMBER = "android.telecom.extra.CALL_BACK_NUMBER";
@@ -335,50 +340,6 @@ public class TelecomManager {
     }
 
     /**
-     * Return the corresponding PhoneAccount id of a given subscription id.
-     *
-     * @param subscriptionId The value of the subscription id the caller is trying to get a phone
-     * account id for.
-     * @return A string representing the phone account id or null.
-     *
-     * @hide
-     */
-    @SystemApi
-    public String getPhoneAccountIdForSubscriptionId(long subscriptionId) {
-        try {
-            if (isServiceConnected()) {
-                return getTelecomService().getPhoneAccountIdForSubscriptionId(subscriptionId);
-            }
-        } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getSubscriptionIdForPhoneAccount", e);
-        }
-        return null;
-    }
-
-    /**
-     * Return the subscription id of the PhoneAccount if it exists. This only applies to PSTN
-     * or SIM-based phone accounts. Return -1 otherwise.
-     *
-     * @param accountHandle The {@link PhoneAccountHandle} the caller is trying to get the
-     * subscription id for.
-     * @return The subscription id (a long) or -1 if the phone account is not a SIM or
-     * a subscription id does not exist.
-     *
-     * @hide
-     */
-    @SystemApi
-    public long getSubscriptionIdForPhoneAccount(PhoneAccountHandle accountHandle) {
-        try {
-            if (isServiceConnected()) {
-                return getTelecomService().getSubscriptionIdForPhoneAccount(accountHandle);
-            }
-        } catch (RemoteException e) {
-            Log.e(TAG, "Error calling ITelecomService#getSubscriptionIdForPhoneAccount", e);
-        }
-        return -1;
-    }
-
-    /**
      * Return the {@link PhoneAccount} which is the user-chosen default for making outgoing phone
      * calls with a specified URI scheme.
      * <p>
@@ -493,6 +454,7 @@ public class TelecomManager {
      * {@code PhoneAccount}.
      *
      * @return The phone account handle of the current connection manager.
+     * @hide
      */
     @SystemApi
     public PhoneAccountHandle getConnectionManager() {
@@ -561,6 +523,7 @@ public class TelecomManager {
      *
      * @return {@code true} if the device has more than one account registered and {@code false}
      * otherwise.
+     * @hide
      */
     @SystemApi
     public boolean hasMultipleCallCapableAccounts() {
@@ -571,6 +534,7 @@ public class TelecomManager {
      *  Returns a list of all {@link PhoneAccount}s registered for the calling package.
      *
      * @return A list of {@code PhoneAccountHandle} objects.
+     * @hide
      */
     @SystemApi
     public List<PhoneAccountHandle> getPhoneAccountsForPackage() {
@@ -590,6 +554,7 @@ public class TelecomManager {
      *
      * @param account The {@link PhoneAccountHandle}.
      * @return The {@link PhoneAccount} object.
+     * @hide
      */
     @SystemApi
     public PhoneAccount getPhoneAccount(PhoneAccountHandle account) {
@@ -688,6 +653,7 @@ public class TelecomManager {
      * Remove a {@link PhoneAccount} registration from the system.
      *
      * @param accountHandle A {@link PhoneAccountHandle} for the {@link PhoneAccount} to unregister.
+     * @hide
      */
     @SystemApi
     public void unregisterPhoneAccount(PhoneAccountHandle accountHandle) {
@@ -702,6 +668,7 @@ public class TelecomManager {
 
     /**
      * Remove all Accounts that belong to the calling package from the system.
+     * @hide
      */
     @SystemApi
     public void clearAccounts() {
@@ -966,6 +933,7 @@ public class TelecomManager {
      *            {@link #registerPhoneAccount}.
      * @param extras A bundle that will be passed through to
      *            {@link ConnectionService#onCreateIncomingConnection}.
+     * @hide
      */
     @SystemApi
     public void addNewIncomingCall(PhoneAccountHandle phoneAccount, Bundle extras) {

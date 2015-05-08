@@ -27,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Represents a conference call which can contain any number of {@link Connection} objects.
+ * @hide
  */
 @SystemApi
 public abstract class Conference implements IConferenceable {

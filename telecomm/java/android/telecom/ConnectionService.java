@@ -74,6 +74,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * When there are no more live calls, telecom will unbind from the {@code ConnectionService}.
  * @hide
  */
+@SystemApi
 public abstract class ConnectionService extends Service {
     /**
      * The {@link Intent} that must be declared as handled by the service.

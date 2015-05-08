@@ -1815,33 +1815,17 @@ public class PhoneNumberUtils
         // to the list.
         number = extractNetworkPortionAlt(number);
 
-<<<<<<< HEAD
         Rlog.d(LOG_TAG, "subId:" + subId + ", defaultCountryIso:" +
-=======
-        Rlog.d(LOG_TAG, "subId:" + subId + ", number: " +  number + ", defaultCountryIso:" +
->>>>>>> ksd to lmp-sprout-dev
                 ((defaultCountryIso == null) ? "NULL" : defaultCountryIso));
 
         String emergencyNumbers = "";
         int slotId = SubscriptionManager.getSlotId(subId);
-<<<<<<< HEAD
-
+        
         // retrieve the list of emergency numbers
         // check read-write ecclist property first
         String ecclist = (slotId <= 0) ? "ril.ecclist" : ("ril.ecclist" + slotId);
 
         emergencyNumbers = SystemProperties.get(ecclist, "");
-=======
-
-        if (slotId >= 0) {
-            // retrieve the list of emergency numbers
-            // check read-write ecclist property first
-            String ecclist = (slotId == 0) ? "ril.ecclist" : ("ril.ecclist" + slotId);
-
-            emergencyNumbers = SystemProperties.get(ecclist, "");
-        }
->>>>>>> ksd to lmp-sprout-dev
-
         Rlog.d(LOG_TAG, "slotId:" + slotId + ", emergencyNumbers: " +  emergencyNumbers);
 
         if (TextUtils.isEmpty(emergencyNumbers)) {

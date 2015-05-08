@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package android.widget;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -40,12 +38,9 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
-
 import com.android.internal.R;
 import com.android.internal.widget.AutoScrollHelper.AbsListViewAutoScroller;
-
 import java.util.Locale;
-
 /**
  * A ListPopupWindow anchors itself to a host view and displays a
  * list of choices.
@@ -60,57 +55,41 @@ import java.util.Locale;
 public class ListPopupWindow {
     private static final String TAG = "ListPopupWindow";
     private static final boolean DEBUG = false;
-
     /**
      * This value controls the length of time that the user
      * must leave a pointer down without scrolling to expand
      * the autocomplete dropdown list to cover the IME.
      */
     private static final int EXPAND_LIST_TIMEOUT = 250;
-
     private Context mContext;
     private PopupWindow mPopup;
     private ListAdapter mAdapter;
     private DropDownListView mDropDownList;
-
     private int mDropDownHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
     private int mDropDownWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
     private int mDropDownHorizontalOffset;
     private int mDropDownVerticalOffset;
     private boolean mDropDownVerticalOffsetSet;
-
     private int mDropDownGravity = Gravity.NO_GRAVITY;
-
     private boolean mDropDownAlwaysVisible = false;
     private boolean mForceIgnoreOutsideTouch = false;
     int mListItemExpandMaximum = Integer.MAX_VALUE;
-
     private View mPromptView;
     private int mPromptPosition = POSITION_PROMPT_ABOVE;
-
     private DataSetObserver mObserver;
-
     private View mDropDownAnchorView;
-
     private Drawable mDropDownListHighlight;
-
     private AdapterView.OnItemClickListener mItemClickListener;
     private AdapterView.OnItemSelectedListener mItemSelectedListener;
-
     private final ResizePopupRunnable mResizePopupRunnable = new ResizePopupRunnable();
     private final PopupTouchInterceptor mTouchInterceptor = new PopupTouchInterceptor();
     private final PopupScrollListener mScrollListener = new PopupScrollListener();
     private final ListSelectorHider mHideSelector = new ListSelectorHider();
     private Runnable mShowDropDownRunnable;
-
     private Handler mHandler = new Handler();
-
     private Rect mTempRect = new Rect();
-
     private boolean mModal;
-
     private int mLayoutDirection;
-
     /**
      * The provided prompt view should appear above list content.
      * 
@@ -119,7 +98,6 @@ public class ListPopupWindow {
      * @see #setPromptView(View)
      */
     public static final int POSITION_PROMPT_ABOVE = 0;
-
     /**
      * The provided prompt view should appear below list content.
      * 
@@ -128,7 +106,6 @@ public class ListPopupWindow {
      * @see #setPromptView(View)
      */
     public static final int POSITION_PROMPT_BELOW = 1;
-
     /**
      * Alias for {@link ViewGroup.LayoutParams#MATCH_PARENT}.
      * If used to specify a popup width, the popup will match the width of the anchor view.
@@ -165,7 +142,6 @@ public class ListPopupWindow {
      * screen as needed, regardless of whether this covers the input method.
      */
     public static final int INPUT_METHOD_NOT_NEEDED = PopupWindow.INPUT_METHOD_NOT_NEEDED;
-
     /**
      * Create a new, empty popup window capable of displaying items from a ListAdapter.
      * Backgrounds should be set using {@link #setBackgroundDrawable(Drawable)}.
@@ -175,7 +151,6 @@ public class ListPopupWindow {
     public ListPopupWindow(Context context) {
         this(context, null, com.android.internal.R.attr.listPopupWindowStyle, 0);
     }
-
     /**
      * Create a new, empty popup window capable of displaying items from a ListAdapter.
      * Backgrounds should be set using {@link #setBackgroundDrawable(Drawable)}.
@@ -186,7 +161,6 @@ public class ListPopupWindow {
     public ListPopupWindow(Context context, AttributeSet attrs) {
         this(context, attrs, com.android.internal.R.attr.listPopupWindowStyle, 0);
     }
-
     /**
      * Create a new, empty popup window capable of displaying items from a ListAdapter.
      * Backgrounds should be set using {@link #setBackgroundDrawable(Drawable)}.
@@ -198,7 +172,6 @@ public class ListPopupWindow {
     public ListPopupWindow(Context context, AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
     }
-
     /**
      * Create a new, empty popup window capable of displaying items from a ListAdapter.
      * Backgrounds should be set using {@link #setBackgroundDrawable(Drawable)}.
@@ -210,7 +183,6 @@ public class ListPopupWindow {
      */
     public ListPopupWindow(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         mContext = context;
-
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ListPopupWindow,
                 defStyleAttr, defStyleRes);
         mDropDownHorizontalOffset = a.getDimensionPixelOffset(
@@ -221,14 +193,12 @@ public class ListPopupWindow {
             mDropDownVerticalOffsetSet = true;
         }
         a.recycle();
-
         mPopup = new PopupWindow(context, attrs, defStyleAttr, defStyleRes);
         mPopup.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         // Set the default layout direction to match the default locale one
         final Locale locale = mContext.getResources().getConfiguration().locale;
         mLayoutDirection = TextUtils.getLayoutDirectionFromLocale(locale);
     }
-
     /**
      * Sets the adapter that provides the data and the views to represent the data
      * in this popup window.
@@ -250,7 +220,6 @@ public class ListPopupWindow {
             mDropDownList.setAdapter(mAdapter);
         }
     }
-
     /**
      * Set where the optional prompt view should appear. The default is
      * {@link #POSITION_PROMPT_ABOVE}.
@@ -263,7 +232,6 @@ public class ListPopupWindow {
     public void setPromptPosition(int position) {
         mPromptPosition = position;
     }
-
     /**
      * @return Where the optional prompt view should appear.
      * 
@@ -273,7 +241,6 @@ public class ListPopupWindow {
     public int getPromptPosition() {
         return mPromptPosition;
     }
-
     /**
      * Set whether this window should be modal when shown.
      * 
@@ -287,7 +254,6 @@ public class ListPopupWindow {
         mModal = modal;
         mPopup.setFocusable(modal);
     }
-
     /**
      * Returns whether the popup window will be modal when shown.
      * 
@@ -296,7 +262,6 @@ public class ListPopupWindow {
     public boolean isModal() {
         return mModal;
     }
-
     /**
      * Forces outside touches to be ignored. Normally if {@link #isDropDownAlwaysVisible()} is
      * false, we allow outside touch to dismiss the dropdown. If this is set to true, then we
@@ -307,7 +272,6 @@ public class ListPopupWindow {
     public void setForceIgnoreOutsideTouch(boolean forceIgnoreOutsideTouch) {
         mForceIgnoreOutsideTouch = forceIgnoreOutsideTouch;
     }
-
     /**
      * Sets whether the drop-down should remain visible under certain conditions.
      *
@@ -322,7 +286,6 @@ public class ListPopupWindow {
     public void setDropDownAlwaysVisible(boolean dropDownAlwaysVisible) {
         mDropDownAlwaysVisible = dropDownAlwaysVisible;
     }
-
     /**
      * @return Whether the drop-down is visible under special conditions.
      *
@@ -331,7 +294,6 @@ public class ListPopupWindow {
     public boolean isDropDownAlwaysVisible() {
         return mDropDownAlwaysVisible;
     }
-
     /**
      * Sets the operating mode for the soft input area.
      *
@@ -345,7 +307,6 @@ public class ListPopupWindow {
     public void setSoftInputMode(int mode) {
         mPopup.setSoftInputMode(mode);
     }
-
     /**
      * Returns the current value in {@link #setSoftInputMode(int)}.
      *
@@ -355,7 +316,6 @@ public class ListPopupWindow {
     public int getSoftInputMode() {
         return mPopup.getSoftInputMode();
     }
-
     /**
      * Sets a drawable to use as the list item selector.
      * 
@@ -364,14 +324,12 @@ public class ListPopupWindow {
     public void setListSelector(Drawable selector) {
         mDropDownListHighlight = selector;
     }
-
     /**
      * @return The background drawable for the popup window.
      */
     public Drawable getBackground() {
         return mPopup.getBackground();
     }
-
     /**
      * Sets a drawable to be the background for the popup window.
      * 
@@ -380,7 +338,6 @@ public class ListPopupWindow {
     public void setBackgroundDrawable(Drawable d) {
         mPopup.setBackgroundDrawable(d);
     }
-
     /**
      * Set an animation style to use when the popup window is shown or dismissed.
      * 
@@ -389,7 +346,6 @@ public class ListPopupWindow {
     public void setAnimationStyle(int animationStyle) {
         mPopup.setAnimationStyle(animationStyle);
     }
-
     /**
      * Returns the animation style that will be used when the popup window is
      * shown or dismissed.
@@ -399,7 +355,6 @@ public class ListPopupWindow {
     public int getAnimationStyle() {
         return mPopup.getAnimationStyle();
     }
-
     /**
      * Returns the view that will be used to anchor this popup.
      * 
@@ -408,7 +363,6 @@ public class ListPopupWindow {
     public View getAnchorView() {
         return mDropDownAnchorView;
     }
-
     /**
      * Sets the popup's anchor view. This popup will always be positioned relative to
      * the anchor view when shown.
@@ -418,14 +372,12 @@ public class ListPopupWindow {
     public void setAnchorView(View anchor) {
         mDropDownAnchorView = anchor;
     }
-
     /**
      * @return The horizontal offset of the popup from its anchor in pixels.
      */
     public int getHorizontalOffset() {
         return mDropDownHorizontalOffset;
     }
-
     /**
      * Set the horizontal offset of this popup from its anchor view in pixels.
      * 
@@ -434,7 +386,6 @@ public class ListPopupWindow {
     public void setHorizontalOffset(int offset) {
         mDropDownHorizontalOffset = offset;
     }
-
     /**
      * @return The vertical offset of the popup from its anchor in pixels.
      */
@@ -444,7 +395,6 @@ public class ListPopupWindow {
         }
         return mDropDownVerticalOffset;
     }
-
     /**
      * Set the vertical offset of this popup from its anchor view in pixels.
      * 
@@ -454,7 +404,6 @@ public class ListPopupWindow {
         mDropDownVerticalOffset = offset;
         mDropDownVerticalOffsetSet = true;
     }
-
     /**
      * Set the gravity of the dropdown list. This is commonly used to
      * set gravity to START or END for alignment with the anchor.
@@ -464,14 +413,12 @@ public class ListPopupWindow {
     public void setDropDownGravity(int gravity) {
         mDropDownGravity = gravity;
     }
-
     /**
      * @return The width of the popup window in pixels.
      */
     public int getWidth() {
         return mDropDownWidth;
     }
-
     /**
      * Sets the width of the popup window in pixels. Can also be {@link #MATCH_PARENT}
      * or {@link #WRAP_CONTENT}.
@@ -481,7 +428,6 @@ public class ListPopupWindow {
     public void setWidth(int width) {
         mDropDownWidth = width;
     }
-
     /**
      * Sets the width of the popup window by the size of its content. The final width may be
      * larger to accommodate styled window dressing.
@@ -497,14 +443,12 @@ public class ListPopupWindow {
             setWidth(width);
         }
     }
-
     /**
      * @return The height of the popup window in pixels.
      */
     public int getHeight() {
         return mDropDownHeight;
     }
-
     /**
      * Sets the height of the popup window in pixels. Can also be {@link #MATCH_PARENT}.
      * 
@@ -513,7 +457,6 @@ public class ListPopupWindow {
     public void setHeight(int height) {
         mDropDownHeight = height;
     }
-
     /**
      * Sets a listener to receive events when a list item is clicked.
      * 
@@ -524,7 +467,6 @@ public class ListPopupWindow {
     public void setOnItemClickListener(AdapterView.OnItemClickListener clickListener) {
         mItemClickListener = clickListener;
     }
-
     /**
      * Sets a listener to receive events when a list item is selected.
      * 
@@ -535,7 +477,6 @@ public class ListPopupWindow {
     public void setOnItemSelectedListener(AdapterView.OnItemSelectedListener selectedListener) {
         mItemSelectedListener = selectedListener;
     }
-
     /**
      * Set a view to act as a user prompt for this popup window. Where the prompt view will appear
      * is controlled by {@link #setPromptPosition(int)}.
@@ -552,27 +493,22 @@ public class ListPopupWindow {
             show();
         }
     }
-
     /**
      * Post a {@link #show()} call to the UI thread.
      */
     public void postShow() {
         mHandler.post(mShowDropDownRunnable);
     }
-
     /**
      * Show the popup list. If the list is already showing, this method
      * will recalculate the popup's size and position.
      */
     public void show() {
         int height = buildDropDown();
-
         int widthSpec = 0;
         int heightSpec = 0;
-
         boolean noInputMethod = isInputMethodNotNeeded();
         mPopup.setAllowScrollingAnchorParent(!noInputMethod);
-
         if (mPopup.isShowing()) {
             if (mDropDownWidth == ViewGroup.LayoutParams.MATCH_PARENT) {
                 // The call to PopupWindow's update method below can accept -1 for any
@@ -583,7 +519,6 @@ public class ListPopupWindow {
             } else {
                 widthSpec = mDropDownWidth;
             }
-
             if (mDropDownHeight == ViewGroup.LayoutParams.MATCH_PARENT) {
                 // The call to PopupWindow's update method below can accept -1 for any
                 // value you do not want to update.
@@ -603,9 +538,7 @@ public class ListPopupWindow {
             } else {
                 heightSpec = mDropDownHeight;
             }
-
             mPopup.setOutsideTouchable(!mForceIgnoreOutsideTouch && !mDropDownAlwaysVisible);
-
             mPopup.update(getAnchorView(), mDropDownHorizontalOffset,
                     mDropDownVerticalOffset, widthSpec, heightSpec);
         } else {
@@ -618,7 +551,6 @@ public class ListPopupWindow {
                     mPopup.setWidth(mDropDownWidth);
                 }
             }
-
             if (mDropDownHeight == ViewGroup.LayoutParams.MATCH_PARENT) {
                 heightSpec = ViewGroup.LayoutParams.MATCH_PARENT;
             } else {
@@ -628,7 +560,6 @@ public class ListPopupWindow {
                     mPopup.setHeight(mDropDownHeight);
                 }
             }
-
             mPopup.setWindowLayoutMode(widthSpec, heightSpec);
             mPopup.setClipToScreenEnabled(true);
             
@@ -648,7 +579,6 @@ public class ListPopupWindow {
             }
         }
     }
-
     /**
      * Dismiss the popup window.
      */
@@ -659,7 +589,6 @@ public class ListPopupWindow {
         mDropDownList = null;
         mHandler.removeCallbacks(mResizePopupRunnable);
     }
-
     /**
      * Set a listener to receive a callback when the popup is dismissed.
      *
@@ -668,7 +597,6 @@ public class ListPopupWindow {
     public void setOnDismissListener(PopupWindow.OnDismissListener listener) {
         mPopup.setOnDismissListener(listener);
     }
-
     private void removePromptView() {
         if (mPromptView != null) {
             final ViewParent parent = mPromptView.getParent();
@@ -678,7 +606,6 @@ public class ListPopupWindow {
             }
         }
     }
-
     /**
      * Control how the popup operates with an input method: one of
      * {@link #INPUT_METHOD_FROM_FOCUSABLE}, {@link #INPUT_METHOD_NEEDED},
@@ -694,7 +621,6 @@ public class ListPopupWindow {
     public void setInputMethodMode(int mode) {
         mPopup.setInputMethodMode(mode);
     }
-
     /**
      * Return the current value in {@link #setInputMethodMode(int)}.
      * 
@@ -703,7 +629,6 @@ public class ListPopupWindow {
     public int getInputMethodMode() {
         return mPopup.getInputMethodMode();
     }
-
     /**
      * Set the selected position of the list.
      * Only valid when {@link #isShowing()} == {@code true}.
@@ -720,7 +645,6 @@ public class ListPopupWindow {
             }
         }
     }
-
     /**
      * Clear any current list selection.
      * Only valid when {@link #isShowing()} == {@code true}.
@@ -734,14 +658,12 @@ public class ListPopupWindow {
             list.requestLayout();
         }
     }
-
     /**
      * @return {@code true} if the popup is currently showing, {@code false} otherwise.
      */
     public boolean isShowing() {
         return mPopup.isShowing();
     }
-
     /**
      * @return {@code true} if this popup is configured to assume the user does not need
      * to interact with the IME while it is showing, {@code false} otherwise.
@@ -749,7 +671,6 @@ public class ListPopupWindow {
     public boolean isInputMethodNotNeeded() {
         return mPopup.getInputMethodMode() == INPUT_METHOD_NOT_NEEDED;
     }
-
     /**
      * Perform an item click operation on the specified list adapter position.
      * 
@@ -769,7 +690,6 @@ public class ListPopupWindow {
         }
         return false;
     }
-
     /**
      * @return The currently selected item or null if the popup is not showing.
      */
@@ -779,7 +699,6 @@ public class ListPopupWindow {
         }
         return mDropDownList.getSelectedItem();
     }
-
     /**
      * @return The position of the currently selected item or {@link ListView#INVALID_POSITION}
      * if {@link #isShowing()} == {@code false}.
@@ -792,7 +711,6 @@ public class ListPopupWindow {
         }
         return mDropDownList.getSelectedItemPosition();
     }
-
     /**
      * @return The ID of the currently selected item or {@link ListView#INVALID_ROW_ID}
      * if {@link #isShowing()} == {@code false}.
@@ -805,7 +723,6 @@ public class ListPopupWindow {
         }
         return mDropDownList.getSelectedItemId();
     }
-
     /**
      * @return The View for the currently selected item or null if
      * {@link #isShowing()} == {@code false}.
@@ -818,7 +735,6 @@ public class ListPopupWindow {
         }
         return mDropDownList.getSelectedView();
     }
-
     /**
      * @return The {@link ListView} displayed within the popup window.
      * Only valid when {@link #isShowing()} == {@code true}.
@@ -826,7 +742,6 @@ public class ListPopupWindow {
     public ListView getListView() {
         return mDropDownList;
     }
-
     /**
      * The maximum number of list items that can be visible and still have
      * the list expand when touched.
@@ -836,7 +751,6 @@ public class ListPopupWindow {
     void setListItemExpandMax(int max) {
         mListItemExpandMaximum = max;
     }
-
     /**
      * Filter key down events. By forwarding key down events to this function,
      * views using non-modal ListPopupWindow can have it handle key selection of items.
@@ -860,15 +774,12 @@ public class ListPopupWindow {
                             || !KeyEvent.isConfirmKey(keyCode))) {
                 int curIndex = mDropDownList.getSelectedItemPosition();
                 boolean consumed;
-
                 final boolean below = !mPopup.isAboveAnchor();
-
                 final ListAdapter adapter = mAdapter;
                 
                 boolean allEnabled;
                 int firstItem = Integer.MAX_VALUE;
                 int lastItem = Integer.MIN_VALUE;
-
                 if (adapter != null) {
                     allEnabled = adapter.areAllItemsEnabled();
                     firstItem = allEnabled ? 0 :
@@ -890,10 +801,8 @@ public class ListPopupWindow {
                     //          is declared
                     mDropDownList.mListSelectionHidden = false;
                 }
-
                 consumed = mDropDownList.onKeyDown(keyCode, event);
                 if (DEBUG) Log.v(TAG, "Key down: code=" + keyCode + " list consumed=" + consumed);
-
                 if (consumed) {
                     // If it handled the key event, then the user is
                     // navigating in the list, so we should put it in front.
@@ -904,7 +813,6 @@ public class ListPopupWindow {
                     // of touch mode.
                     mDropDownList.requestFocusFromTouch();
                     show();
-
                     switch (keyCode) {
                         // avoid passing the focus from the text view to the
                         // next component
@@ -928,10 +836,8 @@ public class ListPopupWindow {
                 }
             }
         }
-
         return false;
     }
-
     /**
      * Filter key down events. By forwarding key up events to this function,
      * views using non-modal ListPopupWindow can have it handle key selection of items.
@@ -954,7 +860,6 @@ public class ListPopupWindow {
         }
         return false;
     }
-
     /**
      * Filter pre-IME key events. By forwarding {@link View#onKeyPreIme(int, KeyEvent)}
      * events to this function, views using ListPopupWindow can have it dismiss the popup
@@ -990,7 +895,6 @@ public class ListPopupWindow {
         }
         return false;
     }
-
     /**
      * Returns an {@link OnTouchListener} that can be added to the source view
      * to implement drag-to-open behavior. Generally, the source view should be
@@ -1019,7 +923,6 @@ public class ListPopupWindow {
             }
         };
     }
-
     /**
      * <p>Builds the popup window's content and returns the height the popup
      * should have. Returns -1 when the content already exists.</p>
@@ -1029,10 +932,8 @@ public class ListPopupWindow {
     private int buildDropDown() {
         ViewGroup dropDownView;
         int otherHeights = 0;
-
         if (mDropDownList == null) {
             Context context = mContext;
-
             /**
              * This Runnable exists for the sole purpose of checking if the view layout has got
              * completed and if so call showDropDown to display the drop down. This is used to show
@@ -1048,7 +949,6 @@ public class ListPopupWindow {
                     }
                 }
             };
-
             mDropDownList = new DropDownListView(context, !mModal);
             if (mDropDownListHighlight != null) {
                 mDropDownList.setSelector(mDropDownListHighlight);
@@ -1060,34 +960,27 @@ public class ListPopupWindow {
             mDropDownList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parent, View view,
                         int position, long id) {
-
                     if (position != -1) {
                         DropDownListView dropDownList = mDropDownList;
-
                         if (dropDownList != null) {
                             dropDownList.mListSelectionHidden = false;
                         }
                     }
                 }
-
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
             mDropDownList.setOnScrollListener(mScrollListener);
-
             if (mItemSelectedListener != null) {
                 mDropDownList.setOnItemSelectedListener(mItemSelectedListener);
             }
-
             dropDownView = mDropDownList;
-
             View hintView = mPromptView;
             if (hintView != null) {
                 // if a hint has been specified, we accomodate more space for it and
                 // add a text view in the drop down menu, at the bottom of the list
                 LinearLayout hintContainer = new LinearLayout(context);
                 hintContainer.setOrientation(LinearLayout.VERTICAL);
-
                 LinearLayout.LayoutParams hintParams = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f
                 );
@@ -1107,20 +1000,16 @@ public class ListPopupWindow {
                     Log.e(TAG, "Invalid hint position " + mPromptPosition);
                     break;
                 }
-
                 // measure the hint's height to find how much more vertical space
                 // we need to add to the drop down's height
                 int widthSpec = MeasureSpec.makeMeasureSpec(mDropDownWidth, MeasureSpec.AT_MOST);
                 int heightSpec = MeasureSpec.UNSPECIFIED;
                 hintView.measure(widthSpec, heightSpec);
-
                 hintParams = (LinearLayout.LayoutParams) hintView.getLayoutParams();
                 otherHeights = hintView.getMeasuredHeight() + hintParams.topMargin
                         + hintParams.bottomMargin;
-
                 dropDownView = hintContainer;
             }
-
             mPopup.setContentView(dropDownView);
         } else {
             dropDownView = (ViewGroup) mPopup.getContentView();
@@ -1132,7 +1021,6 @@ public class ListPopupWindow {
                         + hintParams.bottomMargin;
             }
         }
-
         // getMaxAvailableHeight() subtracts the padding, so we put it back
         // to get the available height for the whole window
         int padding = 0;
@@ -1140,7 +1028,6 @@ public class ListPopupWindow {
         if (background != null) {
             background.getPadding(mTempRect);
             padding = mTempRect.top + mTempRect.bottom;
-
             // If we don't have an explicit vertical offset, determine one from the window
             // background so that content will line up.
             if (!mDropDownVerticalOffsetSet) {
@@ -1149,17 +1036,14 @@ public class ListPopupWindow {
         } else {
             mTempRect.setEmpty();
         }
-
         // Max height available on the screen for a popup.
         boolean ignoreBottomDecorations =
                 mPopup.getInputMethodMode() == PopupWindow.INPUT_METHOD_NOT_NEEDED;
         final int maxHeight = mPopup.getMaxAvailableHeight(
                 getAnchorView(), mDropDownVerticalOffset, ignoreBottomDecorations);
-
         if (mDropDownAlwaysVisible || mDropDownHeight == ViewGroup.LayoutParams.MATCH_PARENT) {
             return maxHeight + padding;
         }
-
         final int childWidthSpec;
         switch (mDropDownWidth) {
             case ViewGroup.LayoutParams.WRAP_CONTENT:
@@ -1183,10 +1067,8 @@ public class ListPopupWindow {
         // add padding only if the list has items in it, that way we don't show
         // the popup if it is not needed
         if (listContent > 0) otherHeights += padding;
-
         return listContent + otherHeights;
     }
-
     /**
      * Abstract class that forwards touch events to a {@link ListPopupWindow}.
      *
@@ -1196,45 +1078,33 @@ public class ListPopupWindow {
             implements View.OnTouchListener, View.OnAttachStateChangeListener {
         /** Scaled touch slop, used for detecting movement outside bounds. */
         private final float mScaledTouchSlop;
-
         /** Timeout before disallowing intercept on the source's parent. */
         private final int mTapTimeout;
-
         /** Timeout before accepting a long-press to start forwarding. */
         private final int mLongPressTimeout;
-
         /** Source view from which events are forwarded. */
         private final View mSrc;
-
         /** Runnable used to prevent conflicts with scrolling parents. */
         private Runnable mDisallowIntercept;
-
         /** Runnable used to trigger forwarding on long-press. */
         private Runnable mTriggerLongPress;
-
         /** Whether this listener is currently forwarding touch events. */
         private boolean mForwarding;
-
         /**
          * Whether forwarding was initiated by a long-press. If so, we won't
          * force the window to dismiss when the touch stream ends.
          */
         private boolean mWasLongPress;
-
         /** The id of the first pointer down in the current event stream. */
         private int mActivePointerId;
-
         public ForwardingListener(View src) {
             mSrc = src;
             mScaledTouchSlop = ViewConfiguration.get(src.getContext()).getScaledTouchSlop();
             mTapTimeout = ViewConfiguration.getTapTimeout();
-
             // Use a medium-press timeout. Halfway between tap and long-press.
             mLongPressTimeout = (mTapTimeout + ViewConfiguration.getLongPressTimeout()) / 2;
-
             src.addOnAttachStateChangeListener(this);
         }
-
         /**
          * Returns the popup to which this listener is forwarding events.
          * <p>
@@ -1246,7 +1116,6 @@ public class ListPopupWindow {
          * @return the popup to which this listener is forwarding events
          */
         public abstract ListPopupWindow getPopup();
-
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             final boolean wasForwarding = mForwarding;
@@ -1255,7 +1124,6 @@ public class ListPopupWindow {
                 forwarding = onTouchForwarded(event) || !onForwardingStopped();
             } else {
                 forwarding = onTouchObserved(event) && onForwardingStarted();
-
                 if (forwarding) {
                     // Make sure we cancel any ongoing source event stream.
                     final long now = SystemClock.uptimeMillis();
@@ -1265,25 +1133,20 @@ public class ListPopupWindow {
                     e.recycle();
                 }
             }
-
             mForwarding = forwarding;
             return forwarding || wasForwarding;
         }
-
         @Override
         public void onViewAttachedToWindow(View v) {
         }
-
         @Override
         public void onViewDetachedFromWindow(View v) {
             mForwarding = false;
             mActivePointerId = MotionEvent.INVALID_POINTER_ID;
-
             if (mDisallowIntercept != null) {
                 mSrc.removeCallbacks(mDisallowIntercept);
             }
         }
-
         /**
          * Called when forwarding would like to start.
          * <p>
@@ -1300,7 +1163,6 @@ public class ListPopupWindow {
             }
             return true;
         }
-
         /**
          * Called when forwarding would like to stop.
          * <p>
@@ -1317,7 +1179,6 @@ public class ListPopupWindow {
             }
             return true;
         }
-
         /**
          * Observes motion events and determines when to start forwarding.
          *
@@ -1329,18 +1190,15 @@ public class ListPopupWindow {
             if (!src.isEnabled()) {
                 return false;
             }
-
             final int actionMasked = srcEvent.getActionMasked();
             switch (actionMasked) {
                 case MotionEvent.ACTION_DOWN:
                     mActivePointerId = srcEvent.getPointerId(0);
                     mWasLongPress = false;
-
                     if (mDisallowIntercept == null) {
                         mDisallowIntercept = new DisallowIntercept();
                     }
                     src.postDelayed(mDisallowIntercept, mTapTimeout);
-
                     if (mTriggerLongPress == null) {
                         mTriggerLongPress = new TriggerLongPress();
                     }
@@ -1351,11 +1209,9 @@ public class ListPopupWindow {
                     if (activePointerIndex >= 0) {
                         final float x = srcEvent.getX(activePointerIndex);
                         final float y = srcEvent.getY(activePointerIndex);
-
                         // Has the pointer has moved outside of the view?
                         if (!src.pointInView(x, y, mScaledTouchSlop)) {
                             clearCallbacks();
-
                             // Don't let the parent intercept our events.
                             src.getParent().requestDisallowInterceptTouchEvent(true);
                             return true;
@@ -1367,47 +1223,37 @@ public class ListPopupWindow {
                     clearCallbacks();
                     break;
             }
-
             return false;
         }
-
         private void clearCallbacks() {
             if (mTriggerLongPress != null) {
                 mSrc.removeCallbacks(mTriggerLongPress);
             }
-
             if (mDisallowIntercept != null) {
                 mSrc.removeCallbacks(mDisallowIntercept);
             }
         }
-
         private void onLongPress() {
             clearCallbacks();
-
             final View src = mSrc;
             if (!src.isEnabled() || src.isLongClickable()) {
                 // Ignore long-press if the view is disabled or has its own
                 // handler.
                 return;
             }
-
             if (!onForwardingStarted()) {
                 return;
             }
-
             // Don't let the parent intercept our events.
             src.getParent().requestDisallowInterceptTouchEvent(true);
-
             // Make sure we cancel any ongoing source event stream.
             final long now = SystemClock.uptimeMillis();
             final MotionEvent e = MotionEvent.obtain(now, now, MotionEvent.ACTION_CANCEL, 0, 0, 0);
             src.onTouchEvent(e);
             e.recycle();
-
             mForwarding = true;
             mWasLongPress = true;
         }
-
         /**
          * Handled forwarded motion events and determines when to stop
          * forwarding.
@@ -1421,29 +1267,23 @@ public class ListPopupWindow {
             if (popup == null || !popup.isShowing()) {
                 return false;
             }
-
             final DropDownListView dst = popup.mDropDownList;
             if (dst == null || !dst.isShown()) {
                 return false;
             }
-
             // Convert event to destination-local coordinates.
             final MotionEvent dstEvent = MotionEvent.obtainNoHistory(srcEvent);
             src.toGlobalMotionEvent(dstEvent);
             dst.toLocalMotionEvent(dstEvent);
-
             // Forward converted event to destination view, then recycle it.
             final boolean handled = dst.onForwardedEvent(dstEvent, mActivePointerId);
             dstEvent.recycle();
-
             // Always cancel forwarding when the touch stream ends.
             final int action = srcEvent.getActionMasked();
             final boolean keepForwarding = action != MotionEvent.ACTION_UP
                     && action != MotionEvent.ACTION_CANCEL;
-
             return handled && keepForwarding;
         }
-
         private class DisallowIntercept implements Runnable {
             @Override
             public void run() {
@@ -1451,7 +1291,6 @@ public class ListPopupWindow {
                 parent.requestDisallowInterceptTouchEvent(true);
             }
         }
-
         private class TriggerLongPress implements Runnable {
             @Override
             public void run() {
@@ -1459,7 +1298,6 @@ public class ListPopupWindow {
             }
         }
     }
-
     /**
      * <p>Wrapper class for a ListView. This wrapper can hijack the focus to
      * make sure the list uses the appropriate drawables and states when
@@ -1469,10 +1307,8 @@ public class ListPopupWindow {
     private static class DropDownListView extends ListView {
         /** Duration in milliseconds of the drag-to-open click animation. */
         private static final long CLICK_ANIM_DURATION = 150;
-
         /** Target alpha value for drag-to-open click animation. */
         private static final int CLICK_ANIM_ALPHA = 0x80;
-
         /** Wrapper around Drawable's <code>alpha</code> property. */
         private static final IntProperty<Drawable> DRAWABLE_ALPHA =
                 new IntProperty<Drawable>("alpha") {
@@ -1480,13 +1316,11 @@ public class ListPopupWindow {
                     public void setValue(Drawable object, int value) {
                         object.setAlpha(value);
                     }
-
                     @Override
                     public Integer get(Drawable object) {
                         return object.getAlpha();
                     }
                 };
-
         /*
          * WARNING: This is a workaround for a touch mode issue.
          *
@@ -1521,16 +1355,12 @@ public class ListPopupWindow {
          * True if this wrapper should fake focus.
          */
         private boolean mHijackFocus;
-
         /** Whether to force drawing of the pressed state selector. */
         private boolean mDrawsInPressedState;
-
         /** Current drag-to-open click animation, if any. */
         private Animator mClickAnimation;
-
         /** Helper for drag-to-open auto scrolling. */
         private AbsListViewAutoScroller mScrollHelper;
-
         /**
          * <p>Creates a new list view wrapper.</p>
          *
@@ -1542,7 +1372,6 @@ public class ListPopupWindow {
             // TODO: Add an API to control this
             setCacheColorHint(0); // Transparent, since the background drawable could be anything.
         }
-
         /**
          * Handles forwarded events.
          *
@@ -1552,7 +1381,6 @@ public class ListPopupWindow {
         public boolean onForwardedEvent(MotionEvent event, int activePointerId) {
             boolean handledEvent = true;
             boolean clearPressedItem = false;
-
             final int actionMasked = event.getActionMasked();
             switch (actionMasked) {
                 case MotionEvent.ACTION_CANCEL:
@@ -1567,7 +1395,6 @@ public class ListPopupWindow {
                         handledEvent = false;
                         break;
                     }
-
                     final int x = (int) event.getX(activeIndex);
                     final int y = (int) event.getY(activeIndex);
                     final int position = pointToPosition(x, y);
@@ -1575,22 +1402,18 @@ public class ListPopupWindow {
                         clearPressedItem = true;
                         break;
                     }
-
                     final View child = getChildAt(position - getFirstVisiblePosition());
                     setPressedItem(child, position, x, y);
                     handledEvent = true;
-
                     if (actionMasked == MotionEvent.ACTION_UP) {
                         clickPressedItem(child, position);
                     }
                     break;
             }
-
             // Failure to handle the event cancels forwarding.
             if (!handledEvent || clearPressedItem) {
                 clearPressedItem();
             }
-
             // Manage automatic scrolling.
             if (handledEvent) {
                 if (mScrollHelper == null) {
@@ -1601,10 +1424,8 @@ public class ListPopupWindow {
             } else if (mScrollHelper != null) {
                 mScrollHelper.setEnabled(false);
             }
-
             return handledEvent;
         }
-
         /**
          * Starts an alpha animation on the selector. When the animation ends,
          * the list performs a click on the item.
@@ -1622,43 +1443,35 @@ public class ListPopupWindow {
                 }
             });
             anim.start();
-
             if (mClickAnimation != null) {
                 mClickAnimation.cancel();
             }
             mClickAnimation = anim;
         }
-
         private void clearPressedItem() {
             mDrawsInPressedState = false;
             setPressed(false);
             updateSelectorState();
-
             final View motionView = getChildAt(mMotionPosition - mFirstPosition);
             if (motionView != null) {
                 motionView.setPressed(false);
             }
-
             if (mClickAnimation != null) {
                 mClickAnimation.cancel();
                 mClickAnimation = null;
             }
         }
-
         private void setPressedItem(View child, int position, float x, float y) {
             mDrawsInPressedState = true;
-
             // Ordering is essential. First, update the container's pressed state.
             drawableHotspotChanged(x, y);
             if (!isPressed()) {
                 setPressed(true);
             }
-
             // Next, run layout if we need to stabilize child positions.
             if (mDataChanged) {
                 layoutChildren();
             }
-
             // Manage the pressed view based on motion position. This allows us to
             // play nicely with actual touch and scroll events.
             final View motionView = getChildAt(mMotionPosition - mFirstPosition);
@@ -1666,7 +1479,6 @@ public class ListPopupWindow {
                 motionView.setPressed(false);
             }
             mMotionPosition = position;
-
             // Offset for child coordinates.
             final float childX = x - child.getLeft();
             final float childY = y - child.getTop();
@@ -1674,35 +1486,21 @@ public class ListPopupWindow {
             if (!child.isPressed()) {
                 child.setPressed(true);
             }
-
-            // Manage the pressed view based on motion position. This allows us to
-            // play nicely with actual touch and scroll events.
-            final View motionView = getChildAt(mMotionPosition - mFirstPosition);
-            if (motionView != null) {
-                motionView.setPressed(false);
-            }
-            mMotionPosition = position;
-            child.setPressed(true);
-
             // Ensure that keyboard focus starts from the last touched position.
             setSelectedPositionInt(position);
             positionSelectorLikeTouch(position, child, x, y);
-
             // Refresh the drawable state to reflect the new pressed state,
             // which will also update the selector state.
             refreshDrawableState();
-
             if (mClickAnimation != null) {
                 mClickAnimation.cancel();
                 mClickAnimation = null;
             }
         }
-
         @Override
         boolean touchModeDrawsInPressedState() {
             return mDrawsInPressedState || super.touchModeDrawsInPressedState();
         }
-
         /**
          * <p>Avoids jarring scrolling effect by ensuring that list elements
          * made of a text view fit on a single line.</p>
@@ -1713,20 +1511,16 @@ public class ListPopupWindow {
         @Override
         View obtainView(int position, boolean[] isScrap) {
             View view = super.obtainView(position, isScrap);
-
             if (view instanceof TextView) {
                 ((TextView) view).setHorizontallyScrolling(true);
             }
-
             return view;
         }
-
         @Override
         public boolean isInTouchMode() {
             // WARNING: Please read the comment where mListSelectionHidden is declared
             return (mHijackFocus && mListSelectionHidden) || super.isInTouchMode();
         }
-
         /**
          * <p>Returns the focus state in the drop down.</p>
          *
@@ -1736,7 +1530,6 @@ public class ListPopupWindow {
         public boolean hasWindowFocus() {
             return mHijackFocus || super.hasWindowFocus();
         }
-
         /**
          * <p>Returns the focus state in the drop down.</p>
          *
@@ -1746,7 +1539,6 @@ public class ListPopupWindow {
         public boolean isFocused() {
             return mHijackFocus || super.isFocused();
         }
-
         /**
          * <p>Returns the focus state in the drop down.</p>
          *
@@ -1757,7 +1549,6 @@ public class ListPopupWindow {
             return mHijackFocus || super.hasFocus();
         }
     }
-
     private class PopupDataSetObserver extends DataSetObserver {
         @Override
         public void onChanged() {
@@ -1772,13 +1563,11 @@ public class ListPopupWindow {
             dismiss();
         }
     }
-
     private class ListSelectorHider implements Runnable {
         public void run() {
             clearListSelection();
         }
     }
-
     private class ResizePopupRunnable implements Runnable {
         public void run() {
             if (mDropDownList != null && mDropDownList.getCount() > mDropDownList.getChildCount() &&
@@ -1788,7 +1577,6 @@ public class ListPopupWindow {
             }
         }
     }
-
     private class PopupTouchInterceptor implements OnTouchListener {
         public boolean onTouch(View v, MotionEvent event) {
             final int action = event.getAction();
@@ -1805,13 +1593,10 @@ public class ListPopupWindow {
             return false;
         }
     }
-
     private class PopupScrollListener implements ListView.OnScrollListener {
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                 int totalItemCount) {
-
         }
-
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             if (scrollState == SCROLL_STATE_TOUCH_SCROLL &&
                     !isInputMethodNotNeeded() && mPopup.getContentView() != null) {

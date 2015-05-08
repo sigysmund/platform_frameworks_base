@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.android.systemui.statusbar;
-
 import android.content.Context;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.AnimationDrawable;
@@ -28,11 +26,9 @@ import android.view.ViewStub;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 import com.android.systemui.R;
-
 public class ExpandableNotificationRow extends ActivatableNotificationView {
     private int mRowMinHeight;
     private int mRowMaxHeight;
-
     /** Does this row contain layouts that can adapt to row expansion */
     private boolean mExpandable;
     /** Has the user actively changed the expansion state of this row */
@@ -46,18 +42,15 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
     private boolean mSensitive;
     private boolean mShowingPublicInitialized;
     private boolean mShowingPublicForIntrinsicHeight;
-
     /**
      * Is this notification expanded by the system. The expansion state can be overridden by the
      * user expansion.
      */
     private boolean mIsSystemExpanded;
-
     /**
      * Whether the notification expansion is disabled. This is the case on Keyguard.
      */
     private boolean mExpansionDisabled;
-
     private NotificationContentView mPublicLayout;
     private NotificationContentView mPrivateLayout;
     private int mMaxExpandHeight;
@@ -67,15 +60,12 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
     private String mLoggingKey;
     private boolean mWasReset;
     private NotificationGuts mGuts;
-
     private StatusBarNotification mStatusBarNotification;
     private boolean mIsHeadsUp;
-
     public void setIconAnimationRunning(boolean running) {
         setIconAnimationRunning(running, mPublicLayout);
         setIconAnimationRunning(running, mPrivateLayout);
     }
-
     private void setIconAnimationRunning(boolean running, NotificationContentView layout) {
         if (layout != null) {
             View contractedChild = layout.getContractedChild();
@@ -84,7 +74,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
             setIconAnimationRunningForChild(running, expandedChild);
         }
     }
-
     private void setIconAnimationRunningForChild(boolean running, View child) {
         if (child != null) {
             ImageView icon = (ImageView) child.findViewById(com.android.internal.R.id.icon);
@@ -94,7 +83,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
             setIconRunning(rightIcon, running);
         }
     }
-
     private void setIconRunning(ImageView imageView, boolean running) {
         if (imageView != null) {
             Drawable drawable = imageView.getDrawable();
@@ -115,28 +103,22 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
             }
         }
     }
-
     public void setStatusBarNotification(StatusBarNotification statusBarNotification) {
         mStatusBarNotification = statusBarNotification;
         updateVetoButton();
     }
-
     public StatusBarNotification getStatusBarNotification() {
         return mStatusBarNotification;
     }
-
     public void setHeadsUp(boolean isHeadsUp) {
         mIsHeadsUp = isHeadsUp;
     }
-
     public interface ExpansionLogger {
         public void logNotificationExpansion(String key, boolean userAction, boolean expanded);
     }
-
     public ExpandableNotificationRow(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
     /**
      * Resets this view so it can be re-used for an updated notification.
      */
@@ -159,23 +141,19 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
         resetHeight();
         logExpansionEvent(false, wasExpanded);
     }
-
     public void resetHeight() {
         if (mIsHeadsUp) {
             resetActualHeight();
         }
         mMaxExpandHeight = 0;
         mWasReset = true;
-        mActualHeight = 0;
         onHeightReset();
         requestLayout();
     }
-
     @Override
     protected boolean filterMotionEvent(MotionEvent event) {
         return mIsHeadsUp || super.filterMotionEvent(event);
     }
-
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -192,7 +170,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
         });
         mVetoButton = findViewById(R.id.veto);
     }
-
     @Override
     public boolean onRequestSendAccessibilityEvent(View child, AccessibilityEvent event) {
         if (super.onRequestSendAccessibilityEvent(child, event)) {
@@ -206,7 +183,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
         }
         return false;
     }
-
     @Override
     public void setDark(boolean dark, boolean fade, long delay) {
         super.setDark(dark, fade, delay);
@@ -215,31 +191,25 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
             showing.setDark(dark, fade, delay);
         }
     }
-
     public void setHeightRange(int rowMinHeight, int rowMaxHeight) {
         mRowMinHeight = rowMinHeight;
         mRowMaxHeight = rowMaxHeight;
     }
-
     public boolean isExpandable() {
         return mExpandable;
     }
-
     public void setExpandable(boolean expandable) {
         mExpandable = expandable;
     }
-
     /**
      * @return whether the user has changed the expansion state
      */
     public boolean hasUserChangedExpansion() {
         return mHasUserChangedExpansion;
     }
-
     public boolean isUserExpanded() {
         return mUserExpanded;
     }
-
     /**
      * Set this notification to be expanded by the user
      *
@@ -252,27 +222,22 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
         mUserExpanded = userExpanded;
         logExpansionEvent(true, wasExpanded);
     }
-
     public void resetUserExpansion() {
         mHasUserChangedExpansion = false;
         mUserExpanded = false;
     }
-
     public boolean isUserLocked() {
         return mUserLocked;
     }
-
     public void setUserLocked(boolean userLocked) {
         mUserLocked = userLocked;
     }
-
     /**
      * @return has the system set this notification to be expanded
      */
     public boolean isSystemExpanded() {
         return mIsSystemExpanded;
     }
-
     /**
      * Set this notification to be expanded by the system.
      *
@@ -286,7 +251,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
             logExpansionEvent(false, wasExpanded);
         }
     }
-
     /**
      * @param expansionDisabled whether to prevent notification expansion
      */
@@ -300,14 +264,12 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
             }
         }
     }
-
     /**
      * @return Can the underlying notification be cleared?
      */
     public boolean isClearable() {
         return mStatusBarNotification != null && mStatusBarNotification.isClearable();
     }
-
     /**
      * Apply an expansion state to the layout.
      */
@@ -319,7 +281,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
             setActualHeight(mRowMinHeight);
         }
     }
-
     @Override
     public int getIntrinsicHeight() {
         if (isUserLocked()) {
@@ -330,10 +291,8 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
             // not expanded, so we return the collapsed size
             return mRowMinHeight;
         }
-
         return mShowingPublicForIntrinsicHeight ? mRowMinHeight : getMaxExpandHeight();
     }
-
     /**
      * Check whether the view state is currently expanded. This is given by the system in {@link
      * #setSystemExpanded(boolean)} and can be overridden by user expansion or
@@ -346,7 +305,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
         return !mExpansionDisabled
                 && (!hasUserChangedExpansion() && isSystemExpanded() || isUserExpanded());
     }
-
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
@@ -357,7 +315,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
         }
         mWasReset = false;
     }
-
     private void updateMaxExpandHeight() {
         int intrinsicBefore = getIntrinsicHeight();
         mMaxExpandHeight = mPrivateLayout.getMaxHeight();
@@ -365,15 +322,12 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
             notifyHeightChanged();
         }
     }
-
     public void setSensitive(boolean sensitive) {
         mSensitive = sensitive;
     }
-
     public void setHideSensitiveForIntrinsicHeight(boolean hideSensitive) {
         mShowingPublicForIntrinsicHeight = mSensitive && hideSensitive;
     }
-
     public void setHideSensitive(boolean hideSensitive, boolean animated, long delay,
             long duration) {
         boolean oldShowingPublic = mShowingPublic;
@@ -381,10 +335,8 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
         if (mShowingPublicInitialized && mShowingPublic == oldShowingPublic) {
             return;
         }
-
         // bail out if no public version
         if (mPublicLayout.getChildCount() == 0) return;
-
         if (!animated) {
             mPublicLayout.animate().cancel();
             mPrivateLayout.animate().cancel();
@@ -395,11 +347,9 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
         } else {
             animateShowingPublic(delay, duration);
         }
-
         updateVetoButton();
         mShowingPublicInitialized = true;
     }
-
     private void animateShowingPublic(long delay, long duration) {
         final View source = mShowingPublic ? mPrivateLayout : mPublicLayout;
         View target = mShowingPublic ? mPublicLayout : mPrivateLayout;
@@ -423,22 +373,18 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
                 .setStartDelay(delay)
                 .setDuration(duration);
     }
-
     private void updateVetoButton() {
         // public versions cannot be dismissed
         mVetoButton.setVisibility(isClearable() && !mShowingPublic ? View.VISIBLE : View.GONE);
     }
-
     public int getMaxExpandHeight() {
         return mShowingPublicForIntrinsicHeight ? mRowMinHeight : mMaxExpandHeight;
     }
-
     @Override
     public boolean isContentExpandable() {
         NotificationContentView showingLayout = getShowingLayout();
         return showingLayout.isContentExpandable();
     }
-
     @Override
     public void setActualHeight(int height, boolean notifyListeners) {
         mPrivateLayout.setActualHeight(height);
@@ -449,19 +395,16 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
         invalidate();
         super.setActualHeight(height, notifyListeners);
     }
-
     @Override
     public int getMaxHeight() {
         NotificationContentView showingLayout = getShowingLayout();
         return showingLayout.getMaxHeight();
     }
-
     @Override
     public int getMinHeight() {
         NotificationContentView showingLayout = getShowingLayout();
         return showingLayout.getMinHeight();
     }
-
     @Override
     public void setClipTopAmount(int clipTopAmount) {
         super.setClipTopAmount(clipTopAmount);
@@ -471,26 +414,20 @@ public class ExpandableNotificationRow extends ActivatableNotificationView {
             mGuts.setClipTopAmount(clipTopAmount);
         }
     }
-
     public void notifyContentUpdated() {
         mPublicLayout.notifyContentUpdated();
         mPrivateLayout.notifyContentUpdated();
     }
-
     public boolean isMaxExpandHeightInitialized() {
         return mMaxExpandHeight != 0;
     }
-
     private NotificationContentView getShowingLayout() {
         return mShowingPublic ? mPublicLayout : mPrivateLayout;
     }
-
     public void setExpansionLogger(ExpansionLogger logger, String key) {
         mLogger = logger;
         mLoggingKey = key;
     }
-
-
     private void logExpansionEvent(boolean userAction, boolean wasExpanded) {
         final boolean nowExpanded = isExpanded();
         if (wasExpanded != nowExpanded && mLogger != null) {

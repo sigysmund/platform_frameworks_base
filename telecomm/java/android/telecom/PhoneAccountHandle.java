@@ -16,6 +16,7 @@
 
 package android.telecom;
 
+import android.annotation.SystemApi;
 import android.content.ComponentName;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -37,6 +38,7 @@ import java.util.Objects;
  * {@link TelecomManager#registerPhoneAccount TelecomManager.registerPhoneAccount}.
  * @hide
  */
+@SystemApi
 public class PhoneAccountHandle implements Parcelable {
     private final ComponentName mComponentName;
     private final String mId;

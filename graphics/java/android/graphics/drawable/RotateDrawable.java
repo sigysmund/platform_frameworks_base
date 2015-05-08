@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package android.graphics.drawable;
-
 import com.android.internal.R;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
@@ -31,9 +27,7 @@ import android.content.res.TypedArray;
 import android.content.res.Resources.Theme;
 import android.util.TypedValue;
 import android.util.AttributeSet;
-
 import java.io.IOException;
-
 /**
  * <p>
  * A Drawable that can rotate another Drawable based on the current level value.
@@ -53,18 +47,14 @@ import java.io.IOException;
  */
 public class RotateDrawable extends Drawable implements Drawable.Callback {
     private static final float MAX_LEVEL = 10000.0f;
-
     private final RotateState mState;
-
     private boolean mMutated;
-
     /**
      * Create a new rotating drawable with an empty state.
      */
     public RotateDrawable() {
         this(null, null);
     }
-
     /**
      * Create a new rotating drawable with the specified state. A copy of
      * this state is used as the internal state for the newly created
@@ -75,7 +65,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
     private RotateDrawable(RotateState rotateState, Resources res) {
         mState = new RotateState(rotateState, this, res);
     }
-
     @Override
     public void draw(Canvas canvas) {
         final RotateState st = mState;
@@ -85,13 +74,11 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
         final int h = bounds.bottom - bounds.top;
         final float px = st.mPivotXRel ? (w * st.mPivotX) : st.mPivotX;
         final float py = st.mPivotYRel ? (h * st.mPivotY) : st.mPivotY;
-
         final int saveCount = canvas.save();
         canvas.rotate(st.mCurrentDegrees, px + bounds.left, py + bounds.top);
         d.draw(canvas);
         canvas.restoreToCount(saveCount);
     }
-
     /**
      * Sets the drawable rotated by this RotateDrawable.
      *
@@ -109,51 +96,42 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             }
         }
     }
-
     /**
      * @return The drawable rotated by this RotateDrawable
      */
     public Drawable getDrawable() {
         return mState.mDrawable;
     }
-
     @Override
     public int getChangingConfigurations() {
         return super.getChangingConfigurations()
                 | mState.mChangingConfigurations
                 | mState.mDrawable.getChangingConfigurations();
     }
-
     @Override
     public void setAlpha(int alpha) {
         mState.mDrawable.setAlpha(alpha);
     }
-
     @Override
     public int getAlpha() {
         return mState.mDrawable.getAlpha();
     }
-
     @Override
     public void setColorFilter(ColorFilter cf) {
         mState.mDrawable.setColorFilter(cf);
     }
-
     @Override
     public void setTintList(ColorStateList tint) {
         mState.mDrawable.setTintList(tint);
     }
-
     @Override
     public void setTintMode(Mode tintMode) {
         mState.mDrawable.setTintMode(tintMode);
     }
-
     @Override
     public int getOpacity() {
         return mState.mDrawable.getOpacity();
     }
-
     /**
      * Sets the start angle for rotation.
      *
@@ -168,7 +146,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             invalidateSelf();
         }
     }
-
     /**
      * @return The starting angle for rotation in degrees
      *
@@ -178,7 +155,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
     public float getFromDegrees() {
         return mState.mFromDegrees;
     }
-
     /**
      * Sets the end angle for rotation.
      *
@@ -193,7 +169,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             invalidateSelf();
         }
     }
-
     /**
      * @return The ending angle for rotation in degrees
      *
@@ -203,7 +178,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
     public float getToDegrees() {
         return mState.mToDegrees;
     }
-
     /**
      * Sets the X position around which the drawable is rotated.
      *
@@ -221,7 +195,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             invalidateSelf();
         }
     }
-
     /**
      * @return X position around which to rotate
      *
@@ -231,7 +204,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
     public float getPivotX() {
         return mState.mPivotX;
     }
-
     /**
      * Sets whether the X pivot value represents a fraction of the drawable
      * width or an absolute value in pixels.
@@ -247,7 +219,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             invalidateSelf();
         }
     }
-
     /**
      * @return True if the X pivot represents a fraction of the drawable width,
      *         or false if it represents an absolute value in pixels
@@ -257,7 +228,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
     public boolean isPivotXRelative() {
         return mState.mPivotXRel;
     }
-
     /**
      * Sets the Y position around which the drawable is rotated.
      *
@@ -275,7 +245,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             invalidateSelf();
         }
     }
-
     /**
      * @return Y position around which to rotate
      *
@@ -285,7 +254,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
     public float getPivotY() {
         return mState.mPivotY;
     }
-
     /**
      * Sets whether the Y pivot value represents a fraction of the drawable
      * height or an absolute value in pixels.
@@ -301,7 +269,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             invalidateSelf();
         }
     }
-
     /**
      * @return True if the Y pivot represents a fraction of the drawable height,
      *         or false if it represents an absolute value in pixels
@@ -311,12 +278,10 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
     public boolean isPivotYRelative() {
         return mState.mPivotYRel;
     }
-
     @Override
     public boolean canApplyTheme() {
         return (mState != null && mState.canApplyTheme()) || super.canApplyTheme();
     }
-
     @Override
     public void invalidateDrawable(Drawable who) {
         final Callback callback = getCallback();
@@ -324,7 +289,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             callback.invalidateDrawable(this);
         }
     }
-
     @Override
     public void scheduleDrawable(Drawable who, Runnable what, long when) {
         final Callback callback = getCallback();
@@ -332,7 +296,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             callback.scheduleDrawable(this, what, when);
         }
     }
-
     @Override
     public void unscheduleDrawable(Drawable who, Runnable what) {
         final Callback callback = getCallback();
@@ -340,59 +303,48 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             callback.unscheduleDrawable(this, what);
         }
     }
-
    @Override
     public boolean getPadding(Rect padding) {
         return mState.mDrawable.getPadding(padding);
     }
-
     @Override
     public boolean setVisible(boolean visible, boolean restart) {
         mState.mDrawable.setVisible(visible, restart);
         return super.setVisible(visible, restart);
     }
-
     @Override
     public boolean isStateful() {
         return mState.mDrawable.isStateful();
     }
-
     @Override
     protected boolean onStateChange(int[] state) {
         final boolean changed = mState.mDrawable.setState(state);
         onBoundsChange(getBounds());
         return changed;
     }
-
     @Override
     protected boolean onLevelChange(int level) {
         mState.mDrawable.setLevel(level);
         onBoundsChange(getBounds());
-
         mState.mCurrentDegrees = mState.mFromDegrees +
                 (mState.mToDegrees - mState.mFromDegrees) *
                         (level / MAX_LEVEL);
-
         invalidateSelf();
         return true;
     }
-
     @Override
     protected void onBoundsChange(Rect bounds) {
         mState.mDrawable.setBounds(bounds.left, bounds.top,
                 bounds.right, bounds.bottom);
     }
-
     @Override
     public int getIntrinsicWidth() {
         return mState.mDrawable.getIntrinsicWidth();
     }
-
     @Override
     public int getIntrinsicHeight() {
         return mState.mDrawable.getIntrinsicHeight();
     }
-
     @Override
     public ConstantState getConstantState() {
         if (mState.canConstantState()) {
@@ -401,32 +353,26 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
         }
         return null;
     }
-
     @Override
     public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Theme theme)
             throws XmlPullParserException, IOException {
         final TypedArray a = obtainAttributes(r, theme, attrs, R.styleable.RotateDrawable);
         super.inflateWithAttributes(r, parser, a, R.styleable.RotateDrawable_visible);
-
         // Reset mDrawable to preserve old multiple-inflate behavior. This is
         // silly, but we have CTS tests that rely on it.
         mState.mDrawable = null;
-
         updateStateFromTypedArray(a);
         inflateChildElements(r, parser, attrs, theme);
         verifyRequiredAttributes(a);
         a.recycle();
     }
-
     @Override
     public void applyTheme(Theme t) {
         super.applyTheme(t);
-
         final RotateState state = mState;
         if (state == null) {
             return;
         }
-
         if (state.mThemeAttrs != null) {
             final TypedArray a = t.resolveAttributes(state.mThemeAttrs, R.styleable.RotateDrawable);
             try {
@@ -438,13 +384,10 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
                 a.recycle();
             }
         }
-
         if (state.mDrawable != null && state.mDrawable.canApplyTheme()) {
             state.mDrawable.applyTheme(t);
         }
-
     }
-
     private void inflateChildElements(Resources r, XmlPullParser parser, AttributeSet attrs,
             Theme theme) throws XmlPullParserException, IOException {
         Drawable dr = null;
@@ -457,13 +400,11 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
             }
             dr = Drawable.createFromXmlInner(r, parser, attrs, theme);
         }
-
         if (dr != null) {
             mState.mDrawable = dr;
             dr.setCallback(this);
         }
     }
-
     private void verifyRequiredAttributes(TypedArray a) throws XmlPullParserException {
         // If we're not waiting on a theme, verify required attributes.
         if (mState.mDrawable == null && (mState.mThemeAttrs == null
@@ -473,59 +414,31 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
                     + "child tag defining a drawable");
         }
     }
-
     private void updateStateFromTypedArray(TypedArray a) {
         final RotateState state = mState;
-
         // Account for any configuration changes.
         state.mChangingConfigurations |= a.getChangingConfigurations();
-
         // Extract the theme attributes, if any.
         state.mThemeAttrs = a.extractThemeAttrs();
-
         if (a.hasValue(R.styleable.RotateDrawable_pivotX)) {
             final TypedValue tv = a.peekValue(R.styleable.RotateDrawable_pivotX);
             state.mPivotXRel = tv.type == TypedValue.TYPE_FRACTION;
             state.mPivotX = state.mPivotXRel ? tv.getFraction(1.0f, 1.0f) : tv.getFloat();
         }
-
         if (a.hasValue(R.styleable.RotateDrawable_pivotY)) {
             final TypedValue tv = a.peekValue(R.styleable.RotateDrawable_pivotY);
             state.mPivotYRel = tv.type == TypedValue.TYPE_FRACTION;
             state.mPivotY = state.mPivotYRel ? tv.getFraction(1.0f, 1.0f) : tv.getFloat();
         }
-
         state.mFromDegrees = a.getFloat(R.styleable.RotateDrawable_fromDegrees, state.mFromDegrees);
         state.mToDegrees = a.getFloat(R.styleable.RotateDrawable_toDegrees, state.mToDegrees);
         state.mCurrentDegrees = state.mFromDegrees;
-
         final Drawable dr = a.getDrawable(R.styleable.RotateDrawable_drawable);
         if (dr != null) {
             state.mDrawable = dr;
             dr.setCallback(this);
         }
     }
-
-    @Override
-    public void applyTheme(Theme t) {
-        super.applyTheme(t);
-
-        final RotateState state = mState;
-        if (state == null) {
-            return;
-        }
-
-        if (state.mDrawable != null) {
-            state.mDrawable.applyTheme(t);
-        }
-    }
-
-    @Override
-    public boolean canApplyTheme() {
-        final RotateState state = mState;
-        return state != null && state.mDrawable != null && state.mDrawable.canApplyTheme();
-    }
-
     @Override
     public Drawable mutate() {
         if (!mMutated && super.mutate() == this) {
@@ -534,7 +447,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
         }
         return this;
     }
-
     /**
      * @hide
      */
@@ -543,7 +455,6 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
         mState.mDrawable.clearMutated();
         mMutated = false;
     }
-
     /**
      * Represents the state of a rotation for a given drawable. The same
      * rotate drawable can be invoked with different states to drive several
@@ -552,22 +463,16 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
     final static class RotateState extends Drawable.ConstantState {
         int[] mThemeAttrs;
         int mChangingConfigurations;
-
         Drawable mDrawable;
-
         boolean mPivotXRel = true;
         float mPivotX = 0.5f;
         boolean mPivotYRel = true;
         float mPivotY = 0.5f;
-
         float mFromDegrees = 0.0f;
         float mToDegrees = 360.0f;
-
         float mCurrentDegrees = 0.0f;
-
         private boolean mCheckedConstantState;
         private boolean mCanConstantState;
-
         RotateState(RotateState orig, RotateDrawable owner, Resources res) {
             if (orig != null) {
                 mThemeAttrs = orig.mThemeAttrs;
@@ -591,34 +496,28 @@ public class RotateDrawable extends Drawable implements Drawable.Callback {
                 mCheckedConstantState = mCanConstantState = true;
             }
         }
-
         @Override
         public boolean canApplyTheme() {
             return mThemeAttrs != null || (mDrawable != null && mDrawable.canApplyTheme())
                     || super.canApplyTheme();
         }
-
         @Override
         public Drawable newDrawable() {
             return new RotateDrawable(this, null);
         }
-
         @Override
         public Drawable newDrawable(Resources res) {
             return new RotateDrawable(this, res);
         }
-
         @Override
         public int getChangingConfigurations() {
             return mChangingConfigurations;
         }
-
         public boolean canConstantState() {
             if (!mCheckedConstantState) {
                 mCanConstantState = mDrawable.getConstantState() != null;
                 mCheckedConstantState = true;
             }
-
             return mCanConstantState;
         }
     }
